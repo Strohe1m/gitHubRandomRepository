@@ -22,11 +22,25 @@ const LANGUAGES = [
 export default function Form () {
     const [repoData, setRepoData] = useState('Please select Language')
     const [submitBtn, setSubmitBtn] = useState()
+    const [repoDataClass, setRepoDataClass] = useState('')
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.stopPropagation()
         
         if (!e.target.value) { return }
+
+        try {
+            setRepoData('Loading, please wait...')
+            const repo = await getRandomGitHubRepo(e.target.value)
+            
+
+            setRepoDataClass('got-data')
+            setRepoData(<StructuredData repo={repo}/>)
+        } catch {
+            setRepoDataClass('got-error')
+            setRepoData('Error fetching repositorioes')
+        }
+        
 
         setSubmitBtn(<SubmitBtn text={'Refresh'}/>)
     }
@@ -52,7 +66,7 @@ export default function Form () {
                         })
                     }
                 </select>
-                <div>
+                <div className={`repoData ${repoDataClass}`}>
                     {repoData}
                 </div>
             </div>
@@ -68,4 +82,31 @@ function SubmitBtn ({ text }) {
             {text}
         </button>
     )
+}
+
+function StructuredData ({ repo }) {
+    const {
+        name,
+        description,
+        language,
+        stargazers_count,
+        forks_count,
+        open_issues_count
+    } = repo
+
+    return (
+        <div className='repo-data-inner'>
+            <span>{name}</span>
+            <p>
+                {description}
+            </p>
+            <div>
+                <span>{language}</span>
+                <span>{stargazers_count}</span>
+                <span>{forks_count}</span>
+                <span>{open_issues_count}</span>
+            </div>
+        </div>
+    )
+
 }
