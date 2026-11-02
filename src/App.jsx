@@ -1,9 +1,10 @@
 import './App.css'
+import Form from './components/searchRepositoryForm.jsx'
 
 function App() {
   return (
-    <div>
-      
+    <div className='outer'>
+      <Form />
     </div>
   )
 }
