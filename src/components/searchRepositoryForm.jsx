@@ -29,20 +29,25 @@ export default function Form () {
         
         if (!e.target.value) { return }
 
+        let repos, randomIndex
+
         try {
             setRepoData('Loading, please wait...')
-            const repo = await getRandomGitHubRepo(e.target.value)
-            
+            repos = await getRandomGitHubRepo(e.target.value)
+            randomIndex = Math.floor(Math.random() * repos.length);
 
             setRepoDataClass('got-data')
-            setRepoData(<StructuredData repo={repo}/>)
+            setRepoData(<StructuredData repo={repos[randomIndex]}/>)
         } catch {
             setRepoDataClass('got-error')
             setRepoData('Error fetching repositorioes')
+            setSubmitBtn(<SubmitBtn text={'Try again...'}/>)
         }
         
 
-        setSubmitBtn(<SubmitBtn text={'Refresh'}/>)
+        setSubmitBtn(<SubmitBtn text={'Refresh'} 
+                            repos={repos} 
+                            changeRepoData={setRepoData}/>)
     }
 
     return (
@@ -75,10 +80,20 @@ export default function Form () {
     )
 }
 
-function SubmitBtn ({ text }) {
+function SubmitBtn ({ text, repos, changeRepoData }) {
     
+    const clickHandler = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        const randomIndex = Math.floor(Math.random() * repos.length);
+        changeRepoData(<StructuredData repo={repos[randomIndex]}/>)
+    }
+
     return (
-        <button type='submit' className='submitBtn'>
+        <button
+            className='submitBtn'
+            onClick={(e) => clickHandler(e)}    
+        >
             {text}
         </button>
     )
@@ -98,7 +113,7 @@ function StructuredData ({ repo }) {
         <div className='repo-data-inner'>
             <span>{name}</span>
             <p>
-                {description}
+                {description || 'No Description'}
             </p>
             <div>
                 <span>{language}</span>

@@ -25,8 +25,7 @@ export default async function getRandomGitHubRepo ( lang ) {
         throw new Error('Репозитории не найдены');
         }
 
-        const randomIndex = Math.floor(Math.random() * repos.length);
-        return repos[randomIndex];
+        return repos;
 
     } catch (e) {
         console.error(e.message);

@@ -27,11 +27,19 @@
     div.repoData {
         margin-top: 20px;
         min-height: 100px;
+
         display: flex;
         align-items: center;
         justify-content: center;
         background-color: #e9ecef;
         border-radius: 10px;
+
+        p {
+            overflow-y: scroll;
+            scrollbar-width: none;
+            max-height: 300px;
+            
+        }
     }
 
     div.got-data {
