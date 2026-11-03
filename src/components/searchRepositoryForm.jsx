@@ -118,7 +118,9 @@ function StructuredData ({ repo }) {
             <div>
                 <span>{language}</span>
                 <span>{stargazers_count}</span>
-                <span>{forks_count}</span>
+                <span>
+                    {forks_count}
+                </span>
                 <span>{open_issues_count}</span>
             </div>
         </div>
