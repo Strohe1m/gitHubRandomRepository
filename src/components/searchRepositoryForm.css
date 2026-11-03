@@ -1,6 +1,6 @@
 
 .form {
-    width: fit-content;
+    width: 95%;
     height: fit-content;
     max-width: 640px;
     position: absolute;
@@ -105,11 +105,12 @@
         padding-bottom: 10px;
         background-color: black;
         color: white;
+        border-radius: 5px 5px 0 0;
     }
 
     p, span:first-child {
         overflow: hidden;
-        overflow-y: scroll;
+        overflow-x: scroll;
         scrollbar-width: none;
     }
 
@@ -130,3 +131,10 @@
     
 }
 
+@media (max-width: 480px) {
+    .form-head {
+        h1 {
+            font-size: 0.7em;
+        }
+    }
+}

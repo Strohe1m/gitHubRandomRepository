@@ -24,30 +24,41 @@ export default function Form () {
     const [submitBtn, setSubmitBtn] = useState()
     const [repoDataClass, setRepoDataClass] = useState('')
 
+    const _do = async (e, repos, randomIndex) => {
+        repos = await getRandomGitHubRepo(e.target.value)
+        randomIndex = Math.floor(Math.random() * repos.length);
+
+        setRepoDataClass('got-data')
+        setRepoData(<StructuredData repo={repos[randomIndex]}/>)
+        setSubmitBtn(<SubmitBtn text={'Refresh'} 
+                        repos={repos} 
+                        changeRepoData={setRepoData}/>)
+    }
+
     const submitHandler = async (e) => {
         e.stopPropagation()
         
         if (!e.target.value) { return }
+        
+        setSubmitBtn()
 
         let repos, randomIndex
 
         try {
+            setRepoDataClass('')
             setRepoData('Loading, please wait...')
-            repos = await getRandomGitHubRepo(e.target.value)
-            randomIndex = Math.floor(Math.random() * repos.length);
-
-            setRepoDataClass('got-data')
-            setRepoData(<StructuredData repo={repos[randomIndex]}/>)
+            await _do(e, repos, randomIndex)
         } catch {
             setRepoDataClass('got-error')
             setRepoData('Error fetching repositorioes')
-            setSubmitBtn(<SubmitBtn text={'Try again...'}/>)
-        }
-        
+            setSubmitBtn(<TryAgainBtn 
+                text={'Try again...'}
+                tryFunc={() => _do(e, repos, randomIndex)}
+                repoDataSetter={setRepoData}
+                repoDataClassSetter={setRepoDataClass}
 
-        setSubmitBtn(<SubmitBtn text={'Refresh'} 
-                            repos={repos} 
-                            changeRepoData={setRepoData}/>)
+            />)
+        }
     }
 
     return (
@@ -77,6 +88,37 @@ export default function Form () {
             </div>
             {submitBtn}
         </form>
+    )
+}
+
+function TryAgainBtn ({ text, 
+                        tryFunc, 
+                        repoDataSetter, 
+                        repoDataClassSetter }) {
+
+    const clickHandler = async (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        try {
+            repoDataClassSetter('')
+            repoDataSetter('Loading, please wait...')
+            await tryFunc()
+        } catch {
+            repoDataClassSetter('got-error')
+            repoDataSetter('Error fetching repositorioes')
+            console.error('Error')
+        }
+        
+    }
+
+    return (
+        <button
+            className='submitBtn'
+            onClick={(e) => clickHandler(e)}    
+        >
+            {text}
+        </button>
     )
 }
 
