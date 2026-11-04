@@ -22,7 +22,7 @@ export default async function getRandomGitHubRepo ( lang ) {
         const repos = data.items;
 
         if (!repos || repos.length === 0) {
-        throw new Error('Репозитории не найдены');
+        throw new Error('Reporitories are not found');
         }
 
         return repos;

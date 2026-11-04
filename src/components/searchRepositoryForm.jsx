@@ -2,6 +2,10 @@ import './searchRepositoryForm.css'
 import getRandomGitHubRepo from '../api/gitHubAPI.js'
 import { useState } from 'react'
 import icon from '../assets/icon.jpg'
+import colors from 'github-colors';
+import infoIcon from '../assets/info.svg'
+import starIcon from '../assets/star.svg'
+import gitForkIcon from '../assets/git-fork.svg'
 
 const LANGUAGES = [
   { label: 'Select a Language', value: '' },
@@ -151,6 +155,8 @@ function StructuredData ({ repo }) {
         open_issues_count
     } = repo
 
+    const langColorBg = colors.get(language).color
+
     return (
         <div className='repo-data-inner'>
             <span>{name}</span>
@@ -158,12 +164,26 @@ function StructuredData ({ repo }) {
                 {description || 'No Description'}
             </p>
             <div>
-                <span>{language}</span>
-                <span>{stargazers_count}</span>
                 <span>
+                    <div className='lang-color' 
+                    style={{
+                        backgroundColor: langColorBg,
+                    }}
+                    ></div>
+                    {language}
+                </span>
+                <span>
+                    <img src={starIcon} alt="stars" className='icon'/>    
+                    {stargazers_count}
+                </span>
+                <span>
+                    <img src={gitForkIcon} alt="forks" className='icon'/>    
                     {forks_count}
                 </span>
-                <span>{open_issues_count}</span>
+                <span>
+                    <img src={infoIcon} alt="info" className='icon'/>
+                    {open_issues_count}
+                </span>
             </div>
         </div>
     )
